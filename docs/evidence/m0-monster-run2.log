@@ -1,0 +1,6 @@
+Filtering the log data using "subsystem == "app.monster""
+Timestamp               Ty Process[PID:TID]
+2026-10-22 20:02:20.969 I  Monster[28610:6e1ec] [app.monster:engine] CLI found version=2.1.308
+2026-10-22 20:02:35.817 I  Monster[28610:6e1b9] [app.monster:engine] session start mode=chat perm=default resume=false
+2026-10-22 20:02:52.821 I  Monster[28610:6e1a5] [app.monster:session] first token latency=7240.1ms
+2026-10-22 20:08:25.244 I  Monster[28610:6e1a5] [app.monster:session] first token latency=2046.8ms
