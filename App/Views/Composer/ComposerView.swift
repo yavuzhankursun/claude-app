@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 /// Yüzen glass composer. Odaklanınca/metin girilince genişler; gönder düğmesi tur sırasında durdur'a dönüşür.
@@ -45,7 +45,7 @@ struct ComposerView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 11)
-            .novaGlass(cornerRadius: expanded ? 22 : 26)
+            .monsterGlass(cornerRadius: expanded ? 22 : 26)
             .glassEffectID("composer", in: glassNamespace)
 
             sendButton
@@ -65,7 +65,7 @@ struct ComposerView: View {
                     .font(.system(size: 14, weight: .semibold))
                     .frame(width: 34, height: 34)
             }
-            .buttonStyle(.novaGlass(shape: .circle))
+            .buttonStyle(.monsterGlass(shape: .circle))
             .help("Durdur (Esc)")
             .accessibilityLabel("Durdur")
         } else {
@@ -76,7 +76,7 @@ struct ComposerView: View {
                     .font(.system(size: 15, weight: .bold))
                     .frame(width: 34, height: 34)
             }
-            .buttonStyle(.novaGlass(prominent: true, shape: .circle))
+            .buttonStyle(.monsterGlass(prominent: true, shape: .circle))
             .disabled(!canSend)
             .help("Gönder (↩)")
             .accessibilityLabel("Gönder")
@@ -114,7 +114,7 @@ struct ModeBadge: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
             .foregroundStyle(style.color)
-            .novaGlass(in: Capsule(), tint: style.color.opacity(0.22), interactive: false)
+            .monsterGlass(in: Capsule(), tint: style.color.opacity(0.22), interactive: false)
     }
 
     private var style: (text: LocalizedStringKey, color: Color) {

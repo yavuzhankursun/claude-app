@@ -1,5 +1,5 @@
 import AppKit
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 struct CodeBlockView: View {
@@ -28,7 +28,7 @@ struct CodeBlockView: View {
                         .frame(width: 26, height: 26)
                         .contentTransition(.symbolEffect(.replace))
                 }
-                .buttonStyle(.novaGlass(shape: .circle))
+                .buttonStyle(.monsterGlass(shape: .circle))
                 .frame(width: 26, height: 26)
                 .help("Kopyala")
                 .accessibilityLabel(copied ? "Kopyalandı" : "Kodu kopyala")
@@ -46,7 +46,7 @@ struct CodeBlockView: View {
                     .padding(12)
             }
         }
-        .novaGlass(cornerRadius: Theme.smallCorner, interactive: false)
+        .monsterGlass(cornerRadius: Theme.smallCorner, interactive: false)
     }
 
     static func highlighted(_ code: String, language: String?) -> AttributedString {

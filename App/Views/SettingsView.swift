@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 struct SettingsView: View {
@@ -54,7 +54,7 @@ private struct SecuritySettings: View {
         Form {
             Section {
                 LabeledContent("Kimlik") {
-                    Text("Nova API anahtarı tutmaz; kurulu `claude` CLI'ının girişini kullanır.")
+                    Text("Monster API anahtarı tutmaz; kurulu `claude` CLI'ının girişini kullanır.")
                         .foregroundStyle(.secondary)
                 }
                 LabeledContent("Loglar") {

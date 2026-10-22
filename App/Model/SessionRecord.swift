@@ -1,8 +1,8 @@
 import Foundation
-import NovaCore
+import MonsterCore
 import SwiftData
 
-/// Nova'nın session meta verisi (SwiftData). Transcript'in kendisi CLI'ın `~/.claude/projects` JSONL'ında kalır;
+/// Monster'ın session meta verisi (SwiftData). Transcript'in kendisi CLI'ın `~/.claude/projects` JSONL'ında kalır;
 /// burada yalnızca başlık, mod, klasör ve tercihler tutulur (docs/adr/0002-persistence.md).
 @Model
 final class SessionRecord {
@@ -11,7 +11,7 @@ final class SessionRecord {
     var modeRaw: String
     /// Kod modunda proje klasörü; sohbet modunda nil.
     var projectPath: String?
-    /// CLI'ın çalıştığı dizin (kod modunda = projectPath, sohbette Nova'nın boş dizini).
+    /// CLI'ın çalıştığı dizin (kod modunda = projectPath, sohbette Monster'ın boş dizini).
     var workingDirectoryPath: String
     var model: String?
     var effortRaw: String?

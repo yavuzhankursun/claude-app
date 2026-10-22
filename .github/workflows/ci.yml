@@ -5,7 +5,7 @@ on:
 
 jobs:
   core:
-    name: NovaCore tests
+    name: MonsterCore tests
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
@@ -13,10 +13,10 @@ jobs:
         with:
           xcode-version: latest-stable
       - run: swift --version
-      - run: cd NovaCore && swift test
+      - run: cd MonsterCore && swift test
 
   app:
-    name: Nova.app build
+    name: Monster.app build
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
@@ -26,5 +26,5 @@ jobs:
       - run: brew install xcodegen
       - run: xcodegen generate --spec project.yml
       - run: >
-          xcodebuild build -project Nova.xcodeproj -scheme Nova -configuration Debug
+          xcodebuild build -project Monster.xcodeproj -scheme Monster -configuration Debug
           -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO

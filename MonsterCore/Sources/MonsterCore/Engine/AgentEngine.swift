@@ -13,7 +13,7 @@ public actor AgentEngine {
     private var locator: CLILocator
     private var installation: CLILocator.Installation?
     private var processes: [UUID: ClaudeProcess] = [:]
-    private let log = Logger(subsystem: "app.nova", category: "engine")
+    private let log = Logger(subsystem: "app.monster", category: "engine")
 
     public init(locator: CLILocator = CLILocator()) {
         self.locator = locator
@@ -89,7 +89,7 @@ public actor AgentEngine {
         return p
     }
 
-    private static func requestId() -> String { "nova-" + UUID().uuidString.lowercased() }
+    private static func requestId() -> String { "monster-" + UUID().uuidString.lowercased() }
 }
 
 extension PermissionDecision {

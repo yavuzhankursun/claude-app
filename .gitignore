@@ -1,10 +1,10 @@
 .DS_Store
 /build/
-/Nova.xcodeproj/
+/Monster.xcodeproj/
 *.xcuserstate
 xcuserdata/
 DerivedData/
 .swiftpm/
-NovaCore/.build/
-NovaCore/.swiftpm/
+MonsterCore/.build/
+MonsterCore/.swiftpm/
 App/Resources/Info.plist

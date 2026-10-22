@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import NovaCore
+@testable import MonsterCore
 
 @Suite("Markdown blokları")
 struct MarkdownTests {

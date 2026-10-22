@@ -28,6 +28,6 @@
 
 ## Sıradaki adımlar
 1. Mac'te: `make bootstrap project core-test build run`.
-2. M0 kanıtı: ekran kaydı + Console'da `first token latency=…ms` (subsystem `app.nova`).
+2. M0 kanıtı: ekran kaydı + Console'da `first token latency=…ms` (subsystem `app.monster`).
 3. G1: koşulların kontrolü ve PRD imzası.
 4. M3: Instruments (SwiftUI + Hitches), a11y ekran görüntüleri, `make release` ile imzalı .app.

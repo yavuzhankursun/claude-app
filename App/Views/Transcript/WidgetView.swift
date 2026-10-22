@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 import WebKit
 

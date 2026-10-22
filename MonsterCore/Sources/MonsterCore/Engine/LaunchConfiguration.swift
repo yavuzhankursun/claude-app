@@ -51,7 +51,7 @@ public struct LaunchConfiguration: Sendable, Hashable {
             "--output-format", "stream-json",
             "--verbose",
             "--include-partial-messages",
-            // İzin istekleri stdout'ta `control_request/can_use_tool` olarak gelir; Nova cevaplar.
+            // İzin istekleri stdout'ta `control_request/can_use_tool` olarak gelir; Monster cevaplar.
             "--permission-prompts", "host",
             "--permission-prompt-tool", "stdio",
         ]

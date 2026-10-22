@@ -1,16 +1,16 @@
-# Nova — geliştirici komutları (macOS 26+, Xcode 27.1 / macOS 27 SDK)
-SCHEME      := Nova
-PROJECT     := Nova.xcodeproj
+# Monster — geliştirici komutları (macOS 26+, Xcode 27.1 / macOS 27 SDK)
+SCHEME      := Monster
+PROJECT     := Monster.xcodeproj
 DERIVED     := build/DerivedData
-APP         := $(DERIVED)/Build/Products/Release/Nova.app
+APP         := $(DERIVED)/Build/Products/Release/Monster.app
 DESTINATION := platform=macOS
 
 .PHONY: help bootstrap project build test core-test run release spike clean
 
 help:
 	@echo "make bootstrap  - xcodegen kur (Homebrew)"
-	@echo "make project    - Nova.xcodeproj üret"
-	@echo "make core-test  - NovaCore birim testleri (swift test)"
+	@echo "make project    - Monster.xcodeproj üret"
+	@echo "make core-test  - MonsterCore birim testleri (swift test)"
 	@echo "make test       - Xcode üzerinden tüm testler"
 	@echo "make build      - Debug derleme"
 	@echo "make run        - Derle ve aç"
@@ -24,7 +24,7 @@ project: bootstrap
 	xcodegen generate --spec project.yml
 
 core-test:
-	cd NovaCore && swift test
+	cd MonsterCore && swift test
 
 test: project
 	xcodebuild test -project $(PROJECT) -scheme $(SCHEME) -destination '$(DESTINATION)' -derivedDataPath $(DERIVED) | xcbeautify 2>/dev/null || \
@@ -34,7 +34,7 @@ build: project
 	xcodebuild build -project $(PROJECT) -scheme $(SCHEME) -configuration Debug -destination '$(DESTINATION)' -derivedDataPath $(DERIVED)
 
 run: build
-	open $(DERIVED)/Build/Products/Debug/Nova.app
+	open $(DERIVED)/Build/Products/Debug/Monster.app
 
 # İmzalı dağıtım (ADR-0005): Developer ID + Hardened Runtime, sandbox yok, notarize.
 release: project
@@ -42,7 +42,7 @@ release: project
 	xcodebuild build -project $(PROJECT) -scheme $(SCHEME) -configuration Release -destination '$(DESTINATION)' \
 		-derivedDataPath $(DERIVED) CODE_SIGN_IDENTITY="$(DEVELOPER_ID)" CODE_SIGN_STYLE=Manual OTHER_CODE_SIGN_FLAGS=--timestamp
 	codesign --verify --deep --strict --verbose=2 $(APP)
-	@echo "Notarize: xcrun notarytool submit <zip> --keychain-profile nova --wait && xcrun stapler staple $(APP)"
+	@echo "Notarize: xcrun notarytool submit <zip> --keychain-profile monster --wait && xcrun stapler staple $(APP)"
 
 spike:
 	node scripts/spike-stream-json.mjs

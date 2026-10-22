@@ -612,12 +612,12 @@
         }
       }
     },
-    "Kullanıcı Nova'da reddetti.": {
+    "Kullanıcı Monster'da reddetti.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The user denied this in Nova."
+            "value": "The user denied this in Monster."
           }
         }
       }
@@ -662,12 +662,12 @@
         }
       }
     },
-    "Nova API anahtarı tutmaz; kurulu `claude` CLI'ının girişini kullanır.": {
+    "Monster API anahtarı tutmaz; kurulu `claude` CLI'ının girişini kullanır.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nova stores no API key; it uses the sign-in of your installed `claude` CLI."
+            "value": "Monster stores no API key; it uses the sign-in of your installed `claude` CLI."
           }
         }
       }

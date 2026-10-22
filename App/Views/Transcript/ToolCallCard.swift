@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 /// Katlanabilir araç kartı (Bash/Edit/Read…). Düz yüzey; glass değil.

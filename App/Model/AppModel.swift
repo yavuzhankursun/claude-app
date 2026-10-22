@@ -1,5 +1,5 @@
 import Foundation
-import NovaCore
+import MonsterCore
 import Observation
 import SwiftData
 
@@ -17,7 +17,7 @@ final class AppModel {
     let context: ModelContext
 
     private(set) var records: [SessionRecord] = []
-    /// Nova'ya henüz aktarılmamış terminal session'ları.
+    /// Monster'a henüz aktarılmamış terminal session'ları.
     private(set) var terminalEntries: [HistoryEntry] = []
     private(set) var cliStatus: CLIStatus = .checking
     private(set) var isRefreshingHistory = false
@@ -114,7 +114,7 @@ final class AppModel {
         return record
     }
 
-    /// Terminalde başlatılmış bir session'ı Nova'ya alır; ilk mesajda `--resume` ile devam eder.
+    /// Terminalde başlatılmış bir session'ı Monster'a alır; ilk mesajda `--resume` ile devam eder.
     func importTerminalSession(_ entry: HistoryEntry) -> SessionRecord {
         if let existing = records.first(where: { $0.cliSessionId == entry.sessionId }) { return existing }
         let path = entry.projectPath ?? FileManager.default.homeDirectoryForCurrentUser.path
@@ -200,7 +200,7 @@ final class AppModel {
     static func chatDirectory(for id: UUID) throws -> URL {
         let base = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
                                                appropriateFor: nil, create: true)
-        let dir = base.appending(path: "Nova/Chats/\(id.uuidString.lowercased())", directoryHint: .isDirectory)
+        let dir = base.appending(path: "Monster/Chats/\(id.uuidString.lowercased())", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }

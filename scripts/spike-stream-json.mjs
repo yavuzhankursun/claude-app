@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// G2 spike: Nova'nın dayandığı CLI protokolünü gerçek `claude` ile doğrular.
+// G2 spike: Monster'ın dayandığı CLI protokolünü gerçek `claude` ile doğrular.
 //   1) stream-json giriş/çıkış, kısmi mesajlar (text_delta)
 //   2) izin isteği: control_request/can_use_tool → control_response (allow + updatedPermissions)
 //   3) aynı süreçte ikinci tur + control_request/interrupt
@@ -10,7 +10,7 @@ import { mkdtempSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const cwd = mkdtempSync(join(tmpdir(), 'nova-spike-'));
+const cwd = mkdtempSync(join(tmpdir(), 'monster-spike-'));
 const bin = process.env.CLAUDE_BIN ?? 'claude';
 const args = ['-p', '--input-format', 'stream-json', '--output-format', 'stream-json', '--verbose',
   '--include-partial-messages', '--model', 'haiku', '--tools', 'Write,Read', '--permission-mode', 'default',

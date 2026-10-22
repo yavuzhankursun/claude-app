@@ -1,6 +1,6 @@
 import Foundation
 
-/// Nova → CLI (stdin) mesajları. Her biri tek satır JSON + "\n" olarak yazılır.
+/// Monster → CLI (stdin) mesajları. Her biri tek satır JSON + "\n" olarak yazılır.
 public enum OutboundMessage: Sendable {
     case userText(String)
     case initialize(requestId: String)
@@ -54,7 +54,7 @@ public enum PermissionDecision: Sendable, Hashable {
     case deny(message: String)
 }
 
-/// Nova'nın UI'daki izin modları ve CLI karşılıkları.
+/// Monster'ın UI'daki izin modları ve CLI karşılıkları.
 public enum PermissionMode: String, Sendable, Hashable, CaseIterable, Codable, Identifiable {
     case ask
     case autoEdit

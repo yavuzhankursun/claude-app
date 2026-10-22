@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 /// CLI'dan gelen `can_use_tool` isteği için glass onay kartı (US-4).
@@ -31,7 +31,7 @@ struct PermissionCard: View {
 
             HStack(spacing: 10) {
                 Button(role: .destructive) {
-                    decide(.deny(message: String(localized: "Kullanıcı Nova'da reddetti.")))
+                    decide(.deny(message: String(localized: "Kullanıcı Monster'da reddetti.")))
                 } label: {
                     Text("Reddet")
                 }
@@ -46,14 +46,14 @@ struct PermissionCard: View {
                 }
 
                 Button("İzin ver") { decide(.allowOnce) }
-                    .buttonStyle(.novaGlassProminent)
+                    .buttonStyle(.monsterGlassProminent)
                     .keyboardShortcut(.return, modifiers: .command)
             }
-            .buttonStyle(.novaGlass)
+            .buttonStyle(.monsterGlass)
             .controlSize(.large)
         }
         .padding(16)
-        .novaGlass(cornerRadius: 24, tint: .orange.opacity(0.12), interactive: false)
+        .monsterGlass(cornerRadius: 24, tint: .orange.opacity(0.12), interactive: false)
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("İzin isteği: \(request.displayName)"))
     }
