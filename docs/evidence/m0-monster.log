@@ -1,0 +1,10 @@
+Filtering the log data using "subsystem == "app.monster""
+Timestamp               Ty Process[PID:TID]
+2026-10-22 19:28:41.131 I  Monster[26298:639bb] [app.monster:engine] CLI found version=2.1.301
+2026-10-22 19:28:54.141 I  Monster[26298:639b8] [app.monster:engine] session start mode=chat perm=default resume=false
+2026-10-22 19:29:43.983 I  Monster[26465:64931] [app.monster:engine] CLI found version=2.1.301
+2026-10-22 19:29:52.114 I  Monster[26465:6492e] [app.monster:engine] session start mode=chat perm=default resume=true
+2026-10-22 19:30:37.454 I  Monster[26611:64fe0] [app.monster:engine] CLI found version=2.1.301
+2026-10-22 19:30:45.440 I  Monster[26611:64fe0] [app.monster:engine] session start mode=chat perm=default resume=true
+2026-10-22 19:31:18.650 I  Monster[26700:655b6] [app.monster:engine] CLI found version=2.1.301
+2026-10-22 19:31:33.900 I  Monster[26700:655b6] [app.monster:engine] session start mode=code perm=default resume=true
