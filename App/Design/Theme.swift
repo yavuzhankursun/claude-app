@@ -126,6 +126,7 @@ struct NovaGlassButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
         let label = configuration.label
             .padding(.horizontal, shape == .circle ? 0 : 14)

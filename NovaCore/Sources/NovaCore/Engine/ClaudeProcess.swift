@@ -35,11 +35,19 @@ public final class ClaudeProcess: @unchecked Sendable {
     private let stderrTail = Mutex(Data())
     private let writeLock = Mutex(())
     private let firstOutputAt = Mutex<Date?>(nil)
+    /// Akış yalnızca hem süreç çıktığında hem stdout EOF'a ulaştığında kapanır; son parça kaybolmaz.
+    private let completion = Mutex(Completion())
+
+    private struct Completion {
+        var exit: (status: Int32, reason: Process.TerminationReason)?
+        var stdoutClosed = false
+        var finished = false
+    }
 
     private static let stderrTailLimit = 8 * 1024
 
     public init(executable: URL, configuration: LaunchConfiguration) throws {
-        Self.ignoreSigpipeOnce()
+        ClaudeProcess.ignoreSigpipeOnce()
 
         let process = Process()
         process.executableURL = executable
@@ -68,6 +76,9 @@ public final class ClaudeProcess: @unchecked Sendable {
             guard let self else { return }
             if chunk.isEmpty {
                 handle.readabilityHandler = nil
+                if let last = self.splitter.withLock({ $0.finish() }) { self.emit(line: last) }
+                self.completion.withLock { $0.stdoutClosed = true }
+                self.finishIfComplete()
                 return
             }
             self.firstOutputAt.withLock { if $0 == nil { $0 = Date() } }
@@ -88,16 +99,15 @@ public final class ClaudeProcess: @unchecked Sendable {
         }
         process.terminationHandler = { [weak self] proc in
             guard let self else { return }
-            // Kalan çıktıyı boşalt, sonra akışı kapat.
-            outReader.readabilityHandler = nil
-            errReader.readabilityHandler = nil
-            let rest = outReader.readDataToEndOfFile()
-            var lines = self.splitter.withLock { $0.append(rest) }
-            if let last = self.splitter.withLock({ $0.finish() }) { lines.append(last) }
-            for line in lines { self.emit(line: line) }
-            let tail = self.stderrTail.withLock { String(decoding: $0, as: UTF8.self) }
-            self.continuation.yield(.exited(status: proc.terminationStatus, reason: proc.terminationReason, stderrTail: tail))
-            self.continuation.finish()
+            // stdout'un kalanı readabilityHandler'dan EOF ile gelir; burada yalnızca çıkış bilgisi kaydedilir.
+            self.completion.withLock { $0.exit = (proc.terminationStatus, proc.terminationReason) }
+            self.finishIfComplete()
+            // Torun süreç stdout'u açık tutarsa sonsuza dek beklenmesin.
+            Task.detached { [weak self] in
+                try? await Task.sleep(for: .seconds(2))
+                self?.completion.withLock { $0.stdoutClosed = true }
+                self?.finishIfComplete()
+            }
         }
 
         do {
@@ -127,7 +137,7 @@ public final class ClaudeProcess: @unchecked Sendable {
 
     /// stdin'i kapatır; CLI mevcut turu bitirip çıkar.
     public func closeInput() {
-        writeLock.withLock { _ in try? stdinHandle.close() }
+        writeLock.withLock { _ in _ = try? stdinHandle.close() }
     }
 
     /// Önce SIGTERM, `grace` sonra hâlâ yaşıyorsa SIGKILL.
@@ -141,6 +151,18 @@ public final class ClaudeProcess: @unchecked Sendable {
         }
     }
 
+    private func finishIfComplete() {
+        let exit: (status: Int32, reason: Process.TerminationReason)? = completion.withLock { state in
+            guard let exit = state.exit, state.stdoutClosed, !state.finished else { return nil }
+            state.finished = true
+            return exit
+        }
+        guard let exit else { return }
+        let tail = stderrTail.withLock { String(decoding: $0, as: UTF8.self) }
+        continuation.yield(.exited(status: exit.status, reason: exit.reason, stderrTail: tail))
+        continuation.finish()
+    }
+
     private func emit(line: Data) {
         if let message = InboundMessage.decode(line: line) {
             continuation.yield(.message(message))
@@ -151,7 +173,7 @@ public final class ClaudeProcess: @unchecked Sendable {
 
     private static let sigpipeIgnored: Void = {
         // Ölmüş bir sürecin stdin'ine yazmak SIGPIPE ile uygulamayı düşürmesin; write() hata döndürsün.
-        signal(SIGPIPE, SIG_IGN)
+        _ = signal(SIGPIPE, SIG_IGN)
     }()
 
     private static func ignoreSigpipeOnce() { _ = sigpipeIgnored }

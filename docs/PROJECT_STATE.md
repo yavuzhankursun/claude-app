@@ -20,6 +20,9 @@
   İlk iş: Mac'te `make core-test` ve `make build`; çıkan derleme hataları düzeltilir.
 - macOS 26/27'ye özgü API'ler (`Glass.clear`, `glassEffectTransition(.matchedGeometry)`, `ToolbarSpacer`,
   `scrollEdgeEffectStyle`, SF Symbols 7 `drawOn`) Xcode 27.1'de doğrulanacak.
+- Bağımsız okuma-incelemesi (derleme odaklı) yapıldı; bulunan olası hata (init'te erken `Self`) ve belirsiz noktalar
+  (`@Entry` → elle `FocusedValueKey`, `@ViewBuilder makeBody`, SIGPIPE ifadesi) düzeltildi. Kalan belirsiz API:
+  `.transition(.symbolEffect(.drawOn))` — derleme hatası verirse `.symbolEffect(.appear)` ile değiştirin.
 - Performans metrikleri (hitch, 120 fps, soğuk açılış) ölçülmedi.
 - Reduce Transparency / Increase Contrast / Reduce Motion ekran görüntüsü kanıtları alınmadı.
 
