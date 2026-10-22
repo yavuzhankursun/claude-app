@@ -1,5 +1,5 @@
 import Foundation
-import NovaCore
+import MonsterCore
 import Observation
 import os
 
@@ -33,7 +33,7 @@ final class SessionController: Identifiable {
     @ObservationIgnored private var lastPublish = ContinuousClock.now
     @ObservationIgnored private var sendInstant: ContinuousClock.Instant?
     @ObservationIgnored private var historyLoaded = false
-    @ObservationIgnored private let log = Logger(subsystem: "app.nova", category: "session")
+    @ObservationIgnored private let log = Logger(subsystem: "app.monster", category: "session")
 
     /// 60 Hz: 16.6 ms. Akış sırasında en sık bu aralıkla yayınlanır.
     static let frameBudget: Duration = .milliseconds(16)

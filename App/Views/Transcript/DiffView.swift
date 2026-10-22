@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 /// Edit/MultiEdit/Write için birleşik (unified) diff görünümü.
@@ -32,7 +32,7 @@ struct DiffView: View {
             }
             .frame(maxHeight: 360)
         }
-        .novaGlass(cornerRadius: Theme.smallCorner, interactive: false)
+        .monsterGlass(cornerRadius: Theme.smallCorner, interactive: false)
     }
 
     private var visibleLines: [DiffLine] {

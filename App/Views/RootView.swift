@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 struct RootView: View {
@@ -14,7 +14,7 @@ struct RootView: View {
                 .navigationSplitViewColumnWidth(min: 230, ideal: 270, max: 380)
         } detail: {
             ZStack {
-                NovaBackground()
+                MonsterBackground()
                 detail
             }
         }
@@ -31,7 +31,7 @@ struct RootView: View {
             }
         }
         .onChange(of: window.selection) { _, selection in
-            // Terminal session'ı seçildiğinde Nova'ya aktarılır ve kayıt olarak seçilir.
+            // Terminal session'ı seçildiğinde Monster'a aktarılır ve kayıt olarak seçilir.
             if case .terminal(let sessionId)? = selection,
                let entry = model.terminalEntries.first(where: { $0.sessionId == sessionId }) {
                 let record = model.importTerminalSession(entry)
@@ -62,7 +62,7 @@ struct WelcomeView: View {
                 .font(.system(size: 54, weight: .light))
                 .foregroundStyle(.tint)
                 .symbolEffect(.breathe, options: .repeat(.continuous))
-            Text("Nova")
+            Text("Monster")
                 .font(.largeTitle.weight(.semibold))
             Text("Claude Code için yerel bir macOS istemcisi.")
                 .foregroundStyle(.secondary)
@@ -76,7 +76,7 @@ struct WelcomeView: View {
                         Label("Sohbet", systemImage: "bubble.left.and.text.bubble.right")
                             .padding(.horizontal, 6)
                     }
-                    .buttonStyle(.novaGlass)
+                    .buttonStyle(.monsterGlass)
                     .controlSize(.large)
 
                     Button {
@@ -86,7 +86,7 @@ struct WelcomeView: View {
                         Label("Kod", systemImage: "chevron.left.forwardslash.chevron.right")
                             .padding(.horizontal, 6)
                     }
-                    .buttonStyle(.novaGlassProminent)
+                    .buttonStyle(.monsterGlassProminent)
                     .controlSize(.large)
                 }
             }
@@ -111,7 +111,7 @@ struct CLIStatusView: View {
                 Label("Claude Code \(version ?? "?")", systemImage: "checkmark.seal")
                     .foregroundStyle(.secondary)
             } else {
-                Label("Claude Code \(version ?? "?") — Nova \(CLILocator.testedVersion) ile test edildi; akış formatı farklı olabilir.",
+                Label("Claude Code \(version ?? "?") — Monster \(CLILocator.testedVersion) ile test edildi; akış formatı farklı olabilir.",
                       systemImage: "exclamationmark.triangle")
                     .foregroundStyle(.yellow)
             }

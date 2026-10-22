@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 /// ⌘K komut paleti: session'lar arası geçiş ve temel komutlar. Glass panel (yüzen katman).
@@ -68,7 +68,7 @@ struct CommandPalette: View {
                 .frame(maxHeight: 360)
             }
             .frame(width: 560)
-            .novaGlass(cornerRadius: 24, interactive: false)
+            .monsterGlass(cornerRadius: 24, interactive: false)
             .padding(.top, 90)
         }
         .onAppear { focused = true }

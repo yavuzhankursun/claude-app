@@ -15,7 +15,7 @@ public struct CLILocator: Sendable {
         }
     }
 
-    /// Nova'nın test edildiği CLI sürümü. Farklı majör/minör sürümde UI uyarı gösterir (parser yine toleranslıdır).
+    /// Monster'ın test edildiği CLI sürümü. Farklı majör/minör sürümde UI uyarı gösterir (parser yine toleranslıdır).
     public static let testedVersion = "2.1.308"
 
     public var overridePath: String?
@@ -73,7 +73,7 @@ public struct CLILocator: Sendable {
         let current = env["PATH"].map { $0.split(separator: ":").map(String.init) } ?? []
         env["PATH"] = (extra + current).reduce(into: [String]()) { acc, p in if !acc.contains(p) { acc.append(p) } }
             .joined(separator: ":")
-        // Nova içinden başlatılan CLI'ın başka bir Claude Code oturumunun çocuğu sanılmaması için.
+        // Monster içinden başlatılan CLI'ın başka bir Claude Code oturumunun çocuğu sanılmaması için.
         env.removeValue(forKey: "CLAUDECODE")
         return env
     }

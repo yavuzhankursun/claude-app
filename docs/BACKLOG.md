@@ -11,4 +11,4 @@
 - `get_context_usage` control isteğiyle kategori bazlı bağlam dökümü
 - Görsel/dosya ekleme (composer'a sürükle-bırak)
 - SwiftUI `WebView`/`WebPage`'e geçiş (ADR-0003)
-- Session'ı Nova içinde yeniden adlandırma, sabitleme
+- Session'ı Monster içinde yeniden adlandırma, sabitleme

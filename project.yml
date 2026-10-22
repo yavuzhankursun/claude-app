@@ -1,46 +1,46 @@
-# XcodeGen tanımı: `make project` → Nova.xcodeproj (üretilen proje git'e girmez).
-name: Nova
+# XcodeGen tanımı: `make project` → Monster.xcodeproj (üretilen proje git'e girmez).
+name: Monster
 options:
-  bundleIdPrefix: app.nova
+  bundleIdPrefix: app.monster
   developmentLanguage: tr
   deploymentTarget:
     macOS: "26.0"
   createIntermediateGroups: true
 packages:
-  NovaCore:
-    path: NovaCore
+  MonsterCore:
+    path: MonsterCore
 settings:
   base:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "26.0"
     SDKROOT: macosx          # Kurulu en güncel macOS SDK (Xcode 27.1 → macOS 27 SDK)
 targets:
-  Nova:
+  Monster:
     type: application
     platform: macOS
     sources:
       - path: App
         excludes:
-          - "Resources/Nova.entitlements"
+          - "Resources/Monster.entitlements"
     dependencies:
-      - package: NovaCore
+      - package: MonsterCore
     info:
       path: App/Resources/Info.plist
       properties:
-        CFBundleDisplayName: Nova
+        CFBundleDisplayName: Monster
         CFBundleShortVersionString: "0.1.0"
         CFBundleVersion: "1"
         CFBundleDevelopmentRegion: tr
         CFBundleLocalizations: [tr, en]
         LSApplicationCategoryType: public.app-category.developer-tools
         LSMinimumSystemVersion: "26.0"
-        NSHumanReadableCopyright: "Nova — Claude Code için kişisel macOS istemcisi"
+        NSHumanReadableCopyright: "Monster — Claude Code için kişisel macOS istemcisi"
     entitlements:
-      path: App/Resources/Nova.entitlements
+      path: App/Resources/Monster.entitlements
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.nova.Nova
-        PRODUCT_NAME: Nova
+        PRODUCT_BUNDLE_IDENTIFIER: app.monster.Monster
+        PRODUCT_NAME: Monster
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_IDENTITY: "-"            # yerel; dağıtımda "Developer ID Application" (make release)
         ENABLE_HARDENED_RUNTIME: YES
@@ -59,15 +59,15 @@ targets:
           SWIFT_OPTIMIZATION_LEVEL: -O
           SWIFT_COMPILATION_MODE: wholemodule
 schemes:
-  Nova:
+  Monster:
     build:
       targets:
-        Nova: all
+        Monster: all
     run:
       config: Debug
     test:
       config: Debug
       targets:
-        - package: NovaCore/NovaCoreTests
+        - package: MonsterCore/MonsterCoreTests
     profile:
       config: Release

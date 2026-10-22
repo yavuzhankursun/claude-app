@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 /// Canlı transcript (US-3). `LazyVStack` ile tembel; satırlar `Equatable` olduğundan yalnızca değişen
@@ -74,7 +74,7 @@ struct TranscriptRow: View, Equatable {
                 .foregroundStyle(.tertiary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .novaGlass(in: Capsule(), interactive: false)
+                .monsterGlass(in: Capsule(), interactive: false)
         case .toolCall(let call):
             ToolCallCard(call: call)
         case .notice(let notice):
@@ -153,7 +153,7 @@ struct NoticeRow: View {
         .foregroundStyle(.secondary)
         .padding(.horizontal, 14)
         .padding(.vertical, 7)
-        .novaGlass(in: Capsule(), interactive: false)
+        .monsterGlass(in: Capsule(), interactive: false)
         .frame(maxWidth: .infinity, alignment: .center)
     }
 }

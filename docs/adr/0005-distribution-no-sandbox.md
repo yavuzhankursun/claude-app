@@ -3,7 +3,7 @@
 **Durum:** Kabul · **Tarih:** 2026-10-22
 
 ## Bağlam
-Nova kullanıcının `claude` çalıştırılabilirini (çoğu zaman `~/.local/bin` altında, kendisi de node/bun çalıştıran)
+Monster kullanıcının `claude` çalıştırılabilirini (çoğu zaman `~/.local/bin` altında, kendisi de node/bun çalıştıran)
 alt süreç olarak başlatır ve CLI kullanıcının proje klasörlerinde serbestçe okuyup yazar. App Sandbox'ta alt süreçler
 sandbox'ı miras alır; CLI ev dizinine, `~/.claude`'a ve projelere erişemez.
 

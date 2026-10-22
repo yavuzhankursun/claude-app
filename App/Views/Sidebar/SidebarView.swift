@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 /// Projelere göre gruplu session listesi (US-1). Kenar çubuğu macOS 26'da sistem tarafından Liquid Glass olarak çizilir.

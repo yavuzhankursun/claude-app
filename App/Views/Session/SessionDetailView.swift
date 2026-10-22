@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 /// Bir session'ın ana görünümü: transcript (düz yüzeyler) + yüzen glass katman (izin kartı, durum pili, composer).
@@ -69,7 +69,7 @@ struct StatusPill: View {
             .font(.callout)
             .padding(.horizontal, 14)
             .padding(.vertical, 7)
-            .novaGlass(in: Capsule())
+            .monsterGlass(in: Capsule())
             .frame(maxWidth: .infinity, alignment: .leading)
             .transition(.blurReplace)
             .accessibilityElement(children: .combine)
@@ -79,7 +79,7 @@ struct StatusPill: View {
                 .foregroundStyle(.yellow)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 7)
-                .novaGlass(in: Capsule(), tint: .yellow.opacity(0.18))
+                .monsterGlass(in: Capsule(), tint: .yellow.opacity(0.18))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }

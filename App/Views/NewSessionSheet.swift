@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -48,7 +48,7 @@ struct NewSessionSheet: View {
                                 .lineLimit(1)
                                 .truncationMode(.head)
                             Button("Seç…") { pickingFolder = true }
-                                .buttonStyle(.novaGlass)
+                                .buttonStyle(.monsterGlass)
                         }
                     }
                     Picker("İzin modu", selection: $permission) {
@@ -87,10 +87,10 @@ struct NewSessionSheet: View {
             HStack {
                 Spacer()
                 Button("Vazgeç", role: .cancel) { dismiss() }
-                    .buttonStyle(.novaGlass)
+                    .buttonStyle(.monsterGlass)
                     .keyboardShortcut(.cancelAction)
                 Button("Başlat") { create() }
-                    .buttonStyle(.novaGlassProminent)
+                    .buttonStyle(.monsterGlassProminent)
                     .keyboardShortcut(.defaultAction)
                     .disabled(mode == .code && folder == nil)
             }

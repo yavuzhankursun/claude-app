@@ -8,7 +8,7 @@ yansımalı efekti olacak; animasyonlar tüm modüllerde bu kurala birebir uyaca
 
 ## Kural
 1. **Tek giriş noktası.** Görünümler `.glassEffect(...)` / `.buttonStyle(.glass…)` çağırmaz; yalnızca
-   `novaGlass(...)` ve `NovaGlassButtonStyle` (`App/Design/Theme.swift`). `grep -rn "glassEffect(" App` yalnızca
+   `monsterGlass(...)` ve `MonsterGlassButtonStyle` (`App/Design/Theme.swift`). `grep -rn "glassEffect(" App` yalnızca
    `Theme.swift`'i göstermelidir.
 2. **Varyant:** `Glass.clear` (en şeffaf) + `.interactive()` (pointer'a göre ayarlı tepki) + isteğe bağlı ton.
 3. **Yansıma:** her glass yüzeyde `SpecularRim` — üst-sol ışıktan gelen degrade kenar (`plusLighter`), Increase

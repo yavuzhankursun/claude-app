@@ -1,10 +1,11 @@
-# Nova — PRD (MVP, macOS)
+# Monster — PRD (MVP, macOS)
 
 Kendi Claude Code istemcimiz. **Tarih:** 2026-10-22 · **Süre:** 4 hafta · **Metot:** app-forge (G0→G6)
 
 ## 1. Kararlar (kullanıcı onaylı)
 | Konu | Karar |
 |---|---|
+| Ad | **Monster** (ilk çalışma adı Nova idi; 2026-10-22 kullanıcı kararıyla değişti) |
 | Platform | Yalnızca macOS (iPhone yok) |
 | SDK | En güncel Apple SDK: **macOS 27 SDK / Xcode 27.1**, Swift 6 dil modu; dağıtım hedefi **macOS 26** (Liquid Glass) |
 | Ajan | Yalnızca Claude Code; Sohbet + Kod modu |
@@ -16,12 +17,12 @@ Kendi Claude Code istemcimiz. **Tarih:** 2026-10-22 · **Süre:** 4 hafta · **M
 - UI dili TR (kaynak) + EN (`Localizable.xcstrings`). Commit: her seferinde sorulur.
 - Uygulama API anahtarı tutmaz; kurulu `claude` CLI'ı ve onun girişini kullanır.
   **Açık risk (G1):** Anthropic koşullarının kişisel kullanım için yerel CLI'ı saran bir istemciye izin verdiği doğrulanacak; gerekirse "API key modu".
-- Proje klasörü kullanıcının Mac'inde: `~/Desktop/nova` (bu repo).
+- Proje klasörü kullanıcının Mac'inde: `~/Desktop/monster` (bu repo).
 
 ## 3. Mimari
 ```
-┌──────────── Nova.app (SwiftUI, macOS 26+, macOS 27 SDK) ─────────────┐
-│ UI: NavigationSplitView · her yüzey novaGlass(.clear + specular rim) │
+┌──────────── Monster.app (SwiftUI, macOS 26+, macOS 27 SDK) ─────────────┐
+│ UI: NavigationSplitView · her yüzey monsterGlass(.clear + specular rim) │
 │   Sidebar · Transcript · Composer · İzin kartı · ⌘K palet            │
 │ Render: MarkdownParser · SyntaxHighlighter · LineDiff · WKWebView     │
 │ Store: SwiftData (SessionRecord meta) · ~/.claude/projects (salt-oku) │
@@ -34,7 +35,7 @@ Kendi Claude Code istemcimiz. **Tarih:** 2026-10-22 · **Süre:** 4 hafta · **M
 ```
 Motor kararı G2 spike'ında verildi: **doğrudan CLI** (ADR-0001, [spike raporu](spike/G2-stream-json.md)).
 
-- **Sohbet modu:** `~/Library/Application Support/Nova/Chats/<id>` boş dizini; araçlar `Read,Glob,Grep,WebSearch,WebFetch`;
+- **Sohbet modu:** `~/Library/Application Support/Monster/Chats/<id>` boş dizini; araçlar `Read,Glob,Grep,WebSearch,WebFetch`;
   `Bash/Edit/Write/NotebookEdit` yasak; izin modu her zaman `default`.
 - **Kod modu:** seçilen klasör; Ask / Auto-edit / Plan / Full access.
 - **Geçmiş:** `~/.claude/projects/*/*.jsonl` salt-okunur indekslenir; terminal session'ları listede, `--resume` ile devam.

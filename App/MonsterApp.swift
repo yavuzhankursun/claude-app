@@ -1,9 +1,9 @@
-import NovaCore
+import MonsterCore
 import SwiftData
 import SwiftUI
 
 @main
-struct NovaApp: App {
+struct MonsterApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     private let container: ModelContainer
     @State private var model: AppModel
@@ -33,7 +33,7 @@ struct NovaApp: App {
         }
         .modelContainer(container)
         .windowToolbarStyle(.unified)
-        .commands { NovaCommands(model: model) }
+        .commands { MonsterCommands(model: model) }
 
         Settings {
             SettingsView()

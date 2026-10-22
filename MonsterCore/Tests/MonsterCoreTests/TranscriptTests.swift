@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import NovaCore
+@testable import MonsterCore
 
 @Suite("Transcript reducer")
 struct TranscriptTests {
@@ -117,7 +117,7 @@ struct TranscriptTests {
 @Suite("Geçmiş indeksi")
 struct HistoryIndexTests {
     @Test func indexesProjectsDirectory() throws {
-        let root = FileManager.default.temporaryDirectory.appending(path: "nova-history-\(UUID().uuidString)")
+        let root = FileManager.default.temporaryDirectory.appending(path: "monster-history-\(UUID().uuidString)")
         let dir = root.appending(path: "-Users-dev-proj")
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }

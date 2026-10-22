@@ -1,4 +1,4 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
 // Elle yazılmış anahtarlar: varsayılan MainActor izolasyonunda `@Entry` makrosunun ürettiği anahtar
@@ -24,7 +24,7 @@ extension FocusedValues {
 }
 
 /// Menü çubuğu komutları. Pencereye özgü eylemler `FocusedValue` üzerinden o pencerenin durumuna gider.
-struct NovaCommands: Commands {
+struct MonsterCommands: Commands {
     @FocusedValue(\.windowState) private var window
     @FocusedValue(\.activeSession) private var session
     let model: AppModel
@@ -67,7 +67,7 @@ struct NovaCommands: Commands {
         }
     }
 
-    /// ⌘1…9: kenar çubuğundaki sıraya göre Nova session'ları.
+    /// ⌘1…9: kenar çubuğundaki sıraya göre Monster session'ları.
     private func selectSession(at index: Int) {
         guard let window else { return }
         let ordered = model.sections(matching: window.sidebarQuery).flatMap(\.records)

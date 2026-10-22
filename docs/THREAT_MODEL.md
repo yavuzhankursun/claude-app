@@ -1,7 +1,7 @@
-# Tehdit modeli (STRIDE) — Nova MVP
+# Tehdit modeli (STRIDE) — Monster MVP
 
 Varlıklar: kullanıcının kaynak kodu ve dosyaları, Claude Code oturumu (CLI'ın kimliği), shell erişimi, transcript'ler.
-Güven sınırları: **(A)** Nova ↔ `claude` alt süreci (stdin/stdout), **(B)** model çıktısı → Nova UI, **(C)** Nova ↔ dosya sistemi.
+Güven sınırları: **(A)** Monster ↔ `claude` alt süreci (stdin/stdout), **(B)** model çıktısı → Monster UI, **(C)** Monster ↔ dosya sistemi.
 
 | # | Tehdit (STRIDE) | Sınır | Kontrol | Kod / test |
 |---|---|---|---|---|
@@ -12,7 +12,7 @@ Güven sınırları: **(A)** Nova ↔ `claude` alt süreci (stdin/stdout), **(B)
 | T-5 | **Tampering:** izin kartında yanlışlıkla onay | B | Düz ↩ atanmadı; ⌘↩ / ⌥⌘↩ / ⌘⌫; kart araç adı + komut/diff önizlemesi gösterir | `PermissionCard` |
 | T-6 | **Info disclosure:** loglarda prompt/dosya içeriği | — | `os.Logger` yalnızca meta veri (mod, araç adı, karar, süre); stderr kullanıcıya gösterilir, loglanmaz | `AgentEngine`, `SessionController` |
 | T-7 | **DoS:** dev/bozuk stdout satırı belleği tüketir | A | Satır üst sınırı 64 MB, bozuk satır atlanır; uzun çıktılar UI'da kırpılır; vurgulama 60 KB sınırı | `NDJSONLineSplitter`, `ToolCallBody.clip` |
-| T-8 | **Repudiation/Integrity:** Nova CLI geçmişini bozar | C | Geçmiş salt-okunur; Nova session silse de JSONL'a dokunmaz | `HistoryIndexer`, `AppModel.delete` |
+| T-8 | **Repudiation/Integrity:** Monster CLI geçmişini bozar | C | Geçmiş salt-okunur; Monster session silse de JSONL'a dokunmaz | `HistoryIndexer`, `AppModel.delete` |
 | T-9 | **DoS:** ölmüş sürecin stdin'ine yazmak SIGPIPE ile uygulamayı düşürür | A | `SIGPIPE` yok sayılır; yazma hata döndürür, UI'da gösterilir | `ClaudeProcess` |
 | T-10 | **Yetim süreçler** | A | Çıkışta `applicationShouldTerminate` → tüm süreçlere SIGTERM, 2 sn sonra SIGKILL | `AppDelegate`, `ClaudeProcess.terminate` |
 

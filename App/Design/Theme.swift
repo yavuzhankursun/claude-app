@@ -1,11 +1,11 @@
 import SwiftUI
 
-/// Nova tasarım dili — "siyah + Liquid Glass + akıcılık".
+/// Monster tasarım dili — "siyah + Liquid Glass + akıcılık".
 ///
 /// KURAL (kullanıcı kararı, docs/adr/0004-design-system.md): Uygulamanın her parçası Liquid Glass'ın en şeffaf
 /// varyantını (`Glass.clear`) kullanır ve bir yansıma (specular) kenarı taşır. Mesaj balonları, kod blokları,
 /// araç kartları, diff, tablolar, butonlar, seçiciler, paneller — istisna yok. Glass'a doğrudan
-/// `.glassEffect(...)` ile değil, yalnızca `novaGlass(...)` / `NovaGlassButtonStyle` ile erişilir; böylece kural
+/// `.glassEffect(...)` ile değil, yalnızca `monsterGlass(...)` / `MonsterGlassButtonStyle` ile erişilir; böylece kural
 /// tek noktadan bire bir uygulanır. Animasyonlar da yalnızca `Motion` üzerinden verilir.
 enum Theme {
     static let backgroundTop = Color(red: 0, green: 0, blue: 0)
@@ -56,7 +56,7 @@ enum Motion {
 // MARK: - Glass kuralı
 
 /// Tek glass girişi: en şeffaf varyant + interaktif tepki + yansıma kenarı + morph geçişi.
-struct NovaGlassModifier<S: InsettableShape>: ViewModifier {
+struct MonsterGlassModifier<S: InsettableShape>: ViewModifier {
     var shape: S
     var tint: Color?
     var interactive: Bool
@@ -103,23 +103,23 @@ struct SpecularRim<S: InsettableShape>: View {
 }
 
 extension View {
-    /// Nova'da glass'a tek erişim yolu.
-    func novaGlass<S: InsettableShape>(in shape: S, tint: Color? = nil, interactive: Bool = true) -> some View {
-        modifier(NovaGlassModifier(shape: shape, tint: tint, interactive: interactive))
+    /// Monster'da glass'a tek erişim yolu.
+    func monsterGlass<S: InsettableShape>(in shape: S, tint: Color? = nil, interactive: Bool = true) -> some View {
+        modifier(MonsterGlassModifier(shape: shape, tint: tint, interactive: interactive))
     }
 
-    func novaGlass(cornerRadius: CGFloat = Theme.corner, tint: Color? = nil, interactive: Bool = true) -> some View {
-        novaGlass(in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous), tint: tint, interactive: interactive)
+    func monsterGlass(cornerRadius: CGFloat = Theme.corner, tint: Color? = nil, interactive: Bool = true) -> some View {
+        monsterGlass(in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous), tint: tint, interactive: interactive)
     }
 
     /// Eski `surface()` çağrıları da artık aynı glass kuralına bağlanır.
     func surface(strong: Bool = false, corner: CGFloat = Theme.corner) -> some View {
-        novaGlass(cornerRadius: corner, tint: strong ? Color.white.opacity(0.05) : nil)
+        monsterGlass(cornerRadius: corner, tint: strong ? Color.white.opacity(0.05) : nil)
     }
 }
 
 /// Tüm butonlar için glass stili: şeffaf glass, yansıma kenarı, ortak basma yayı.
-struct NovaGlassButtonStyle: ButtonStyle {
+struct MonsterGlassButtonStyle: ButtonStyle {
     enum Outline { case capsule, circle, rounded }
     var prominent = false
     var shape: Outline = .capsule
@@ -137,18 +137,18 @@ struct NovaGlassButtonStyle: ButtonStyle {
             .animation(Motion.snap(reduceMotion), value: configuration.isPressed)
         let tint: Color? = prominent ? Theme.accent.opacity(isEnabled ? 0.55 : 0.2) : nil
         switch shape {
-        case .capsule: label.novaGlass(in: Capsule(), tint: tint)
-        case .circle: label.novaGlass(in: Circle(), tint: tint)
-        case .rounded: label.novaGlass(in: RoundedRectangle(cornerRadius: Theme.smallCorner, style: .continuous), tint: tint)
+        case .capsule: label.monsterGlass(in: Capsule(), tint: tint)
+        case .circle: label.monsterGlass(in: Circle(), tint: tint)
+        case .rounded: label.monsterGlass(in: RoundedRectangle(cornerRadius: Theme.smallCorner, style: .continuous), tint: tint)
         }
     }
 }
 
-extension ButtonStyle where Self == NovaGlassButtonStyle {
-    static var novaGlass: NovaGlassButtonStyle { NovaGlassButtonStyle() }
-    static var novaGlassProminent: NovaGlassButtonStyle { NovaGlassButtonStyle(prominent: true) }
-    static func novaGlass(prominent: Bool = false, shape: NovaGlassButtonStyle.Outline) -> NovaGlassButtonStyle {
-        NovaGlassButtonStyle(prominent: prominent, shape: shape)
+extension ButtonStyle where Self == MonsterGlassButtonStyle {
+    static var monsterGlass: MonsterGlassButtonStyle { MonsterGlassButtonStyle() }
+    static var monsterGlassProminent: MonsterGlassButtonStyle { MonsterGlassButtonStyle(prominent: true) }
+    static func monsterGlass(prominent: Bool = false, shape: MonsterGlassButtonStyle.Outline) -> MonsterGlassButtonStyle {
+        MonsterGlassButtonStyle(prominent: prominent, shape: shape)
     }
 }
 
@@ -156,7 +156,7 @@ extension ButtonStyle where Self == NovaGlassButtonStyle {
 
 /// Şeffaf glass'ın "yansıtacağı" zemin: derin siyah gradient + yavaşça kayan vurgu aurası.
 /// Increase Contrast / Reduce Transparency'de aura kapanır, Reduce Motion'da durur.
-struct NovaBackground: View {
+struct MonsterBackground: View {
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

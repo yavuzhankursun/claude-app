@@ -1,7 +1,7 @@
-import NovaCore
+import MonsterCore
 import SwiftUI
 
-/// Asistan metni (US-6). Blok ayrımı NovaCore'da, satır içi biçim native `AttributedString(markdown:)` ile.
+/// Asistan metni (US-6). Blok ayrımı MonsterCore'da, satır içi biçim native `AttributedString(markdown:)` ile.
 struct MarkdownView: View {
     let text: String
     let isStreaming: Bool

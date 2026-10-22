@@ -3,7 +3,7 @@
 **Durum:** Kabul · **Tarih:** 2026-10-22
 
 ## Karar
-- **Markdown:** Blok ayrımı `NovaCore.MarkdownParser` (başlık, paragraf, liste, alıntı, tablo, çitli kod, kural);
+- **Markdown:** Blok ayrımı `MonsterCore.MarkdownParser` (başlık, paragraf, liste, alıntı, tablo, çitli kod, kural);
   satır içi biçim `AttributedString(markdown:, .inlineOnlyPreservingWhitespace)`. Akış sırasında kapanmamış kod çiti
   kod olarak gösterilir.
 - **Kod vurgulama:** `SyntaxHighlighter` — sözcüksel, bağımlılıksız; 60 KB üstü bloklar düz metin (kare bütçesi).

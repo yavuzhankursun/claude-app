@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import NovaCore
+@testable import MonsterCore
 
 /// Fixture'lar CLI 2.1.308 ile G2 spike'ında yakalanan gerçek akışlardır (yollar/id'ler anonimleştirildi).
 enum Fixture {
@@ -108,7 +108,7 @@ struct ProtocolTests {
 @Suite("Başlatma argümanları")
 struct LaunchConfigurationTests {
     @Test func chatModeIsReadOnly() {
-        let config = LaunchConfiguration(mode: .chat, workingDirectory: URL(filePath: "/tmp/nova-chat"), permissionMode: .fullAccess)
+        let config = LaunchConfiguration(mode: .chat, workingDirectory: URL(filePath: "/tmp/monster-chat"), permissionMode: .fullAccess)
         let args = config.arguments
         #expect(args.contains("--tools"))
         let tools = args[args.firstIndex(of: "--tools")! + 1]
