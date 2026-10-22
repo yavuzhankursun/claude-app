@@ -14,7 +14,12 @@ make run            # Monster.xcodeproj üret, derle, aç
 make spike          # gerçek CLI ile protokol doğrulaması (haiku, geçici dizin)
 ```
 
-Gereksinimler: macOS 26+, Xcode 27.1, Claude Code CLI (test edilen: 2.1.308) ve en az bir kez `claude` ile giriş.
+Gereksinimler: macOS 26+, Xcode 27.1, Claude Code CLI 2.1.x (spike: 2.1.308; Mac'te çalıştırılan: 2.1.301) ve
+bağımsız `claude` CLI'ında geçerli bir giriş (`claude auth status` → `loggedIn: true`). Claude masaüstü uygulamasının
+girişi bu CLI'a taşınmaz.
+
+Derleme çıktıları `~/Library/Caches/Monster-build` altına yazılır (`BUILD_ROOT` ile değiştirilebilir). Repo iCloud ile
+eşitlenen bir klasördeyse (ör. `~/Documents`) çıktılar orada olursa codesign genişletilmiş öznitelikler yüzünden düşer.
 
 ## Yapı
 
