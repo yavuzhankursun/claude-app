@@ -1,7 +1,10 @@
 # Monster — geliştirici komutları (macOS 26+, Xcode 27.1 / macOS 27 SDK)
 SCHEME      := Monster
 PROJECT     := Monster.xcodeproj
-DERIVED     := build/DerivedData
+# Derleme çıktıları repo dışında: ~/Documents iCloud ile eşitlenince dosyalara eklenen genişletilmiş öznitelikler
+# codesign'ı "resource fork, Finder information, or similar detritus not allowed" ile düşürüyor.
+BUILD_ROOT  ?= $(HOME)/Library/Caches/Monster-build
+DERIVED     := $(BUILD_ROOT)/DerivedData
 APP         := $(DERIVED)/Build/Products/Release/Monster.app
 DESTINATION := platform=macOS
 
@@ -24,7 +27,7 @@ project: bootstrap
 	xcodegen generate --spec project.yml
 
 core-test:
-	cd MonsterCore && swift test
+	cd MonsterCore && swift test --scratch-path "$(BUILD_ROOT)/core"
 
 test: project
 	xcodebuild test -project $(PROJECT) -scheme $(SCHEME) -destination '$(DESTINATION)' -derivedDataPath $(DERIVED) | xcbeautify 2>/dev/null || \
@@ -48,4 +51,4 @@ spike:
 	node scripts/spike-stream-json.mjs
 
 clean:
-	rm -rf build $(PROJECT)
+	rm -rf build "$(BUILD_ROOT)" $(PROJECT)

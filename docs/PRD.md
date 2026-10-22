@@ -17,7 +17,8 @@ Kendi Claude Code istemcimiz. **Tarih:** 2026-10-22 · **Süre:** 4 hafta · **M
 - UI dili TR (kaynak) + EN (`Localizable.xcstrings`). Commit: her seferinde sorulur.
 - Uygulama API anahtarı tutmaz; kurulu `claude` CLI'ı ve onun girişini kullanır.
   **Açık risk (G1):** Anthropic koşullarının kişisel kullanım için yerel CLI'ı saran bir istemciye izin verdiği doğrulanacak; gerekirse "API key modu".
-- Proje klasörü kullanıcının Mac'inde: `~/Desktop/monster` (bu repo).
+- Proje klasörü kullanıcının Mac'inde: `~/Documents/GitHub/claude-app` (bu repo). Derleme çıktıları repo dışında,
+  `~/Library/Caches/Monster-build` altında (Documents iCloud ile eşitleniyor; bkz. Makefile).
 
 ## 3. Mimari
 ```

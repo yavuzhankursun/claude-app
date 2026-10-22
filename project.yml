@@ -35,10 +35,11 @@ targets:
         LSApplicationCategoryType: public.app-category.developer-tools
         LSMinimumSystemVersion: "26.0"
         NSHumanReadableCopyright: "Monster — Claude Code için kişisel macOS istemcisi"
-    entitlements:
-      path: App/Resources/Monster.entitlements
     settings:
       base:
+        # `entitlements:` anahtarı xcodegen'in dosyayı her üretimde boş <dict/> ile ezmesine yol açıyordu;
+        # dosya elle yönetilir, yalnızca yolu verilir.
+        CODE_SIGN_ENTITLEMENTS: App/Resources/Monster.entitlements
         PRODUCT_BUNDLE_IDENTIFIER: app.monster.Monster
         PRODUCT_NAME: Monster
         CODE_SIGN_STYLE: Automatic
