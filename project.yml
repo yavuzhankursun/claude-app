@@ -1,0 +1,73 @@
+# XcodeGen tanımı: `make project` → Nova.xcodeproj (üretilen proje git'e girmez).
+name: Nova
+options:
+  bundleIdPrefix: app.nova
+  developmentLanguage: tr
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+packages:
+  NovaCore:
+    path: NovaCore
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    SDKROOT: macosx          # Kurulu en güncel macOS SDK (Xcode 27.1 → macOS 27 SDK)
+targets:
+  Nova:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+        excludes:
+          - "Resources/Nova.entitlements"
+    dependencies:
+      - package: NovaCore
+    info:
+      path: App/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: Nova
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        CFBundleDevelopmentRegion: tr
+        CFBundleLocalizations: [tr, en]
+        LSApplicationCategoryType: public.app-category.developer-tools
+        LSMinimumSystemVersion: "26.0"
+        NSHumanReadableCopyright: "Nova — Claude Code için kişisel macOS istemcisi"
+    entitlements:
+      path: App/Resources/Nova.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.nova.Nova
+        PRODUCT_NAME: Nova
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"            # yerel; dağıtımda "Developer ID Application" (make release)
+        ENABLE_HARDENED_RUNTIME: YES
+        ENABLE_APP_SANDBOX: NO             # ADR-0005
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+        SWIFT_APPROACHABLE_CONCURRENCY: YES
+        SWIFT_STRICT_CONCURRENCY: complete
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        DEAD_CODE_STRIPPING: YES
+      configs:
+        Release:
+          SWIFT_OPTIMIZATION_LEVEL: -O
+          SWIFT_COMPILATION_MODE: wholemodule
+schemes:
+  Nova:
+    build:
+      targets:
+        Nova: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - package: NovaCore/NovaCoreTests
+    profile:
+      config: Release

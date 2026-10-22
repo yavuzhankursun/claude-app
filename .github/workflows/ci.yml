@@ -1,0 +1,30 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  core:
+    name: NovaCore tests
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - run: swift --version
+      - run: cd NovaCore && swift test
+
+  app:
+    name: Nova.app build
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - run: brew install xcodegen
+      - run: xcodegen generate --spec project.yml
+      - run: >
+          xcodebuild build -project Nova.xcodeproj -scheme Nova -configuration Debug
+          -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO

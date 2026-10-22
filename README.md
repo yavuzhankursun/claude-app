@@ -1,0 +1,40 @@
+# Nova
+
+Claude Code için kişisel, native bir macOS istemcisi. SwiftUI + Liquid Glass, en güncel Apple SDK
+(**Xcode 27.1 / macOS 27 SDK**, Swift 6), dağıtım hedefi **macOS 26+**.
+
+Nova kendi API anahtarını tutmaz: kurulu `claude` CLI'ını alt süreç olarak çalıştırır (stream-json) ve onun girişini kullanır.
+
+## Hızlı başlangıç (Mac)
+
+```sh
+make bootstrap      # xcodegen (Homebrew)
+make core-test      # NovaCore birim testleri
+make run            # Nova.xcodeproj üret, derle, aç
+make spike          # gerçek CLI ile protokol doğrulaması (haiku, geçici dizin)
+```
+
+Gereksinimler: macOS 26+, Xcode 27.1, Claude Code CLI (test edilen: 2.1.308) ve en az bir kez `claude` ile giriş.
+
+## Yapı
+
+```
+App/                 SwiftUI uygulaması (Nova.app)
+  Design/Theme.swift   glass kuralı (novaGlass, NovaGlassButtonStyle, Motion, zemin)
+  Model/               AppModel, SessionController (kare başına yayın), SessionRecord (SwiftData)
+  Views/               Sidebar, Session, Transcript, Composer, Permission, Palet, Settings
+NovaCore/            UI'dan bağımsız Swift paketi (swift test)
+  Protocol/            JSONValue, InboundMessage, OutboundMessage, NDJSONLineSplitter
+  Engine/              AgentEngine (actor), ClaudeProcess, LaunchConfiguration, CLILocator
+  Transcript/          TranscriptState reducer (akış + geçmiş + izin + kullanım)
+  History/             ~/.claude/projects indeksleyici (salt-okunur)
+  Rendering/ Diff/     Markdown blokları, vurgulama, widget CSP, satır diff'i
+docs/                PRD, PROJECT_STATE, ADR'ler, tehdit modeli, spike raporu
+scripts/             G2 spike sürücüsü
+```
+
+## Kısayollar
+⌘N yeni kod session'ı · ⇧⌘N yeni sohbet · ⌘K komut paleti · ⌘1…9 session · Esc durdur ·
+↩ gönder / ⇧↩ yeni satır · İzin kartında ⌘↩ izin ver, ⌥⌘↩ bu session için, ⌘⌫ reddet.
+
+Durum ve açık maddeler: [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md).
