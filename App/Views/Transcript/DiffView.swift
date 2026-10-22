@@ -64,7 +64,8 @@ private struct DiffLineRow: View {
         .padding(.vertical, 1)
         .background(background)
         .textSelection(.enabled)
-        .accessibilityElement(children: .combine)
+        // `.combine` seçilebilir metni birleştirirken etiket özyinelemesine girebiliyor (bkz. UserBubble); tek öğe.
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(accessibilityKind): \(line.text)"))
     }
 

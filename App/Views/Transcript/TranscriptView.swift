@@ -95,6 +95,9 @@ struct UserBubble: View {
                 .padding(.vertical, 10)
                 .surface(strong: true)
         }
+        // Seçilebilir Text'i (platform metin görünümü) saran konteynere doğrudan etiket vermek, macOS 27'de
+        // SwiftUI erişilebilirlik etiketinin kendini sonsuz çağırmasına ve çökmeye yol açıyordu; öğe tek ve etiketli.
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Siz: \(text)"))
     }
 }
