@@ -14,7 +14,7 @@ struct RootView: View {
                 .navigationSplitViewColumnWidth(min: 230, ideal: 270, max: 380)
         } detail: {
             ZStack {
-                MonsterBackground()
+                PaintedCanvas()
                 detail
             }
         }
@@ -58,12 +58,10 @@ struct WelcomeView: View {
 
     var body: some View {
         VStack(spacing: 22) {
-            Image(systemName: "sparkle")
-                .font(.system(size: 54, weight: .light))
-                .foregroundStyle(.tint)
-                .symbolEffect(.breathe, options: .repeat(.continuous))
+            // Renk kuralı: dekoratif "AI" simgesi (sparkle) ve renkli vurgu yok; yalnızca yazı markası.
             Text("Monster")
-                .font(.largeTitle.weight(.semibold))
+                .font(.system(size: 44, weight: .semibold))
+                .tracking(-0.5)
             Text("Claude Code için yerel bir macOS istemcisi.")
                 .foregroundStyle(.secondary)
 
@@ -113,7 +111,7 @@ struct CLIStatusView: View {
             } else {
                 Label("Claude Code \(version ?? "?") — Monster \(CLILocator.testedVersion) ile test edildi; akış formatı farklı olabilir.",
                       systemImage: "exclamationmark.triangle")
-                    .foregroundStyle(.yellow)
+                    .foregroundStyle(Theme.warning)
             }
         case .missing:
             Label("Claude Code CLI bulunamadı. Kurup terminalde bir kez `claude` ile giriş yapın; ya da Ayarlar'dan yolu belirtin.",

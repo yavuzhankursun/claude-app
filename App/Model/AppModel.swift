@@ -218,6 +218,7 @@ enum SettingsKeys {
     static let defaultPermission = "defaultPermission"
     static let fullAccessAcknowledged = "fullAccessAcknowledged"
     static let prewarm = "prewarmProcesses"
+    static let appearance = "appearance"
 }
 
 /// Pencere başına durum (çoklu pencere): seçim, sayfalar, palet.

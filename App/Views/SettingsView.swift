@@ -7,7 +7,7 @@ struct SettingsView: View {
             Tab("Genel", systemImage: "gearshape") { GeneralSettings() }
             Tab("Güvenlik", systemImage: "lock.shield") { SecuritySettings() }
         }
-        .frame(width: 520, height: 360)
+        .frame(width: 520, height: 420)
     }
 }
 
@@ -18,9 +18,16 @@ private struct GeneralSettings: View {
     @AppStorage(SettingsKeys.defaultEffort) private var defaultEffort = ""
     @AppStorage(SettingsKeys.defaultPermission) private var defaultPermission = PermissionMode.ask.rawValue
     @AppStorage(SettingsKeys.prewarm) private var prewarm = true
+    @AppStorage(SettingsKeys.appearance) private var appearance = AppearancePreference.system.rawValue
 
     var body: some View {
         Form {
+            Section("Görünüm") {
+                Picker("Tema", selection: $appearance) {
+                    ForEach(AppearancePreference.allCases) { Text($0.title).tag($0.rawValue) }
+                }
+                .pickerStyle(.segmented)
+            }
             Section("Claude Code CLI") {
                 TextField("Yol (boş = otomatik bul)", text: $cliPath, prompt: Text("~/.local/bin/claude"))
                     .onSubmit { Task { await model.checkCLI() } }

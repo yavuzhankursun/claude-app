@@ -76,10 +76,10 @@ struct StatusPill: View {
         } else if case .exited(let message?) = controller.phase {
             Label(message, systemImage: "exclamationmark.triangle")
                 .font(.callout)
-                .foregroundStyle(.yellow)
+                .foregroundStyle(Theme.warning)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 7)
-                .monsterGlass(in: Capsule(), tint: .yellow.opacity(0.18))
+                .monsterGlass(in: Capsule(), tint: Theme.warning.opacity(0.14))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
