@@ -1,0 +1,10 @@
+.DS_Store
+/build/
+/Nova.xcodeproj/
+*.xcuserstate
+xcuserdata/
+DerivedData/
+.swiftpm/
+NovaCore/.build/
+NovaCore/.swiftpm/
+App/Resources/Info.plist
