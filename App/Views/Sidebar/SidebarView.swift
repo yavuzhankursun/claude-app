@@ -112,12 +112,12 @@ struct LiveIndicator: View {
     var body: some View {
         if controller.pendingPermission != nil {
             Image(systemName: "hand.raised.fill")
-                .foregroundStyle(.orange)
+                .foregroundStyle(Theme.warning)
                 .symbolEffect(.pulse, options: .repeat(.continuous), isActive: !reduceMotion)
                 .accessibilityLabel("İzin bekleniyor")
         } else if controller.isTurnActive {
             Circle()
-                .fill(.tint)
+                .fill(Theme.accent)
                 .frame(width: 7, height: 7)
                 .phaseAnimator([0.35, 1.0]) { dot, opacity in dot.opacity(reduceMotion ? 1 : opacity) }
                     animation: { _ in .easeInOut(duration: 0.7) }

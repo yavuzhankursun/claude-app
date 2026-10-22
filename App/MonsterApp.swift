@@ -7,6 +7,7 @@ struct MonsterApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     private let container: ModelContainer
     @State private var model: AppModel
+    @AppStorage(SettingsKeys.appearance) private var appearance = AppearancePreference.system.rawValue
 
     init() {
         let container: ModelContainer
@@ -29,7 +30,7 @@ struct MonsterApp: App {
                 .environment(model)
                 .task { await model.bootstrap() }
                 .frame(minWidth: 820, minHeight: 520)
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(colorScheme)
         }
         .modelContainer(container)
         .windowToolbarStyle(.unified)
@@ -38,9 +39,13 @@ struct MonsterApp: App {
         Settings {
             SettingsView()
                 .environment(model)
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(colorScheme)
         }
     }
+}
+
+private extension MonsterApp {
+    var colorScheme: ColorScheme? { (AppearancePreference(rawValue: appearance) ?? .system).colorScheme }
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {

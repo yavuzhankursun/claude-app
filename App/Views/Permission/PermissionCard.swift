@@ -12,7 +12,7 @@ struct PermissionCard: View {
             HStack(spacing: 10) {
                 Image(systemName: ToolKind(name: request.toolName).symbolName)
                     .font(.title3)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Theme.warning)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Claude \(request.displayName) kullanmak istiyor")
                         .font(.headline)
@@ -53,7 +53,7 @@ struct PermissionCard: View {
             .controlSize(.large)
         }
         .padding(16)
-        .monsterGlass(cornerRadius: 24, tint: .orange.opacity(0.12), interactive: false)
+        .monsterGlass(cornerRadius: 24, tint: Theme.warning.opacity(0.10), interactive: false)
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("İzin isteği: \(request.displayName)"))
     }

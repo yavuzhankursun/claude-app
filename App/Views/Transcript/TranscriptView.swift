@@ -145,7 +145,7 @@ struct NoticeRow: View {
                 Image(systemName: "stop.circle")
                 Text("Durduruldu")
             case .error(let message):
-                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.yellow)
+                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(Theme.warning)
                 Text(message).textSelection(.enabled)
             case .info(let message):
                 Image(systemName: "info.circle")

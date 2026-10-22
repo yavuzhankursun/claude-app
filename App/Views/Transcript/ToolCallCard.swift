@@ -90,7 +90,7 @@ private struct ToolCallBody: View {
                     ScrollView {
                         Text(Self.clip(result.text))
                             .font(.system(.caption, design: .monospaced))
-                            .foregroundStyle(call.status == .failed ? AnyShapeStyle(Color.yellow) : AnyShapeStyle(.secondary))
+                            .foregroundStyle(call.status == .failed ? AnyShapeStyle(Theme.warning) : AnyShapeStyle(.secondary))
                             .textSelection(.enabled)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -120,13 +120,13 @@ struct StatusBadge: View {
             case .streamingInput, .running:
                 ProgressView().controlSize(.small)
             case .awaitingPermission:
-                Image(systemName: "hand.raised.fill").foregroundStyle(.orange)
+                Image(systemName: "hand.raised.fill").foregroundStyle(Theme.warning)
             case .succeeded:
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Theme.success)
                     .transition(.symbolEffect(.drawOn))
             case .failed:
-                Image(systemName: "xmark.circle.fill").foregroundStyle(.yellow)
+                Image(systemName: "xmark.circle.fill").foregroundStyle(Theme.warning)
             case .denied:
                 Image(systemName: "nosign").foregroundStyle(Theme.danger)
             case .cancelled:
