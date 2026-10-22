@@ -44,7 +44,7 @@ struct ProtocolTests {
         #expect(result.isError == false)
         #expect(result.resultText == "Hello there friend!")
         #expect((result.totalCostUSD ?? 0) > 0)
-        #expect(result.contextWindow == 1_000_000)
+        #expect(result.contextWindows == ["claude-haiku-5-5": 1_000_000])
     }
 
     @Test func decodesPermissionRequest() throws {

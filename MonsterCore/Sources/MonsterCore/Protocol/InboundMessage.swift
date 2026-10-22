@@ -111,6 +111,17 @@ public struct SessionInit: Sendable, Hashable {
     public var apiKeySource: String?
 }
 
+/// Abonelik plan limitleri (`rate_limit_event.rate_limit_info.unifiedWindows`). `utilization` 0…1.
+public enum PlanLimitKind: String, Sendable, Hashable, CaseIterable {
+    case fiveHour = "five_hour"
+    case sevenDay = "seven_day"
+}
+
+public struct PlanLimit: Sendable, Hashable {
+    public var utilization: Double
+    public var resetsAt: Date?
+}
+
 public struct ResultInfo: Sendable, Hashable {
     public var subtype: String
     public var isError: Bool
@@ -122,8 +133,9 @@ public struct ResultInfo: Sendable, Hashable {
     public var numTurns: Int?
     public var stopReason: String?
     public var usage: TokenUsage
-    /// `modelUsage.<model>.contextWindow`; bağlam doluluk göstergesi için.
-    public var contextWindow: Int?
+    /// `modelUsage.<model>.contextWindow`, model adına göre. Ana modelin penceresi reducer'da seçilir
+    /// (alt ajanlar başka bir modelle çalışabilir).
+    public var contextWindows: [String: Int]
     public var permissionDenialCount: Int
 }
 
@@ -230,7 +242,7 @@ public enum InboundMessage: Sendable, Hashable {
     case controlRequest(requestId: String, subtype: String)
     case controlResponse(requestId: String, success: Bool, payload: JSONValue?, error: String?)
     case controlCancel(requestId: String)
-    case rateLimit(status: String?, utilization: Double?, resetsAt: Date?)
+    case rateLimit(status: String?, utilization: Double?, resetsAt: Date?, windows: [PlanLimitKind: PlanLimit])
     case unknown(type: String)
 
     public init(json: JSONValue) {
@@ -273,7 +285,7 @@ public enum InboundMessage: Sendable, Hashable {
             self = .user(content: ContentBlock.list(json["message"]?["content"]), parentToolUseId: parent)
         case "result":
             let modelUsage = json["modelUsage"]?.objectValue ?? [:]
-            let window = modelUsage.values.compactMap { $0["contextWindow"]?.intValue }.max()
+            let windows = modelUsage.compactMapValues { $0["contextWindow"]?.intValue }
             self = .result(ResultInfo(
                 subtype: json["subtype"]?.stringValue ?? "?",
                 isError: json["is_error"]?.boolValue ?? false,
@@ -285,7 +297,7 @@ public enum InboundMessage: Sendable, Hashable {
                 numTurns: json["num_turns"]?.intValue,
                 stopReason: json["stop_reason"]?.stringValue,
                 usage: TokenUsage(json: json["usage"]),
-                contextWindow: window,
+                contextWindows: windows,
                 permissionDenialCount: json["permission_denials"]?.arrayValue?.count ?? 0
             ))
         case "control_request":
@@ -318,10 +330,19 @@ public enum InboundMessage: Sendable, Hashable {
             self = .controlCancel(requestId: json["request_id"]?.stringValue ?? "")
         case "rate_limit_event":
             let info = json["rate_limit_info"]
+            var windows: [PlanLimitKind: PlanLimit] = [:]
+            for kind in PlanLimitKind.allCases {
+                guard let window = info?["unifiedWindows"]?[kind.rawValue],
+                      let utilization = window["utilization"]?.doubleValue else { continue }
+                windows[kind] = PlanLimit(
+                    utilization: utilization,
+                    resetsAt: window["resetsAt"]?.doubleValue.map { Date(timeIntervalSince1970: $0) })
+            }
             self = .rateLimit(
                 status: info?["status"]?.stringValue,
                 utilization: info?["utilization"]?.doubleValue,
-                resetsAt: info?["resetsAt"]?.doubleValue.map { Date(timeIntervalSince1970: $0) }
+                resetsAt: info?["resetsAt"]?.doubleValue.map { Date(timeIntervalSince1970: $0) },
+                windows: windows
             )
         case let other:
             self = .unknown(type: other ?? "?")
