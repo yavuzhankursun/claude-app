@@ -179,6 +179,11 @@ final class SessionController: Identifiable {
                     log.info("first token latency=\(latency.milliseconds, format: .fixed(precision: 1), privacy: .public)ms")
                 }
             }
+            // PRD metriği: Monster'ın uçtan uca ilk token süresi ile CLI'ın kendi `ttft_ms`'i yan yana. İkisi farklı tanımlı
+            // (2026-10-22 ölçümünde monster=1424 ms < cli=2270 ms), bu yüzden fark doğrudan Monster'ın ek yükü değildir.
+            if case .result(let info) = message, let cli = info.timeToFirstTokenMs, let latency = lastFirstTokenLatency {
+                log.info("turn ttft monster=\(latency.milliseconds, format: .fixed(precision: 1), privacy: .public)ms cli=\(cli, privacy: .public)ms")
+            }
             publish(force: Self.isUrgent(message))
         case .malformedLine(let bytes):
             log.debug("malformed line bytes=\(bytes, privacy: .public)")

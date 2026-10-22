@@ -20,11 +20,18 @@ public struct TranscriptState: Sendable {
     public private(set) var lastResult: ResultInfo?
 
     // Kullanım
-    public private(set) var totalCostUSD: Double = 0
+    /// Session toplamı (API liste fiyatı karşılığı). `result.total_cost_usd` süreç içinde kümülatiftir; biten süreçlerin
+    /// toplamı `committedCostUSD`'de tutulur, çalışan sürecin son kümülatifi üstüne eklenir.
+    public var totalCostUSD: Double { committedCostUSD + processCostUSD }
+    private var committedCostUSD: Double = 0
+    private var processCostUSD: Double = 0
     public private(set) var contextTokens: Int = 0
-    public private(set) var contextWindow: Int = 200_000
+    /// CLI bildirene kadar bilinmez (geçmişten açılan session'larda ilk `result`'a kadar).
+    public private(set) var contextWindow: Int?
     public private(set) var outputTokensThisTurn: Int = 0
     public private(set) var rateLimitUtilization: Double?
+    /// Son bildirilen 5 saatlik ve haftalık plan limitleri.
+    public private(set) var planLimits: [PlanLimitKind: PlanLimit] = [:]
 
     // Akış takibi
     private var streamedMessageIds: Set<String> = []
@@ -38,8 +45,8 @@ public struct TranscriptState: Sendable {
 
     public init() {}
 
-    public var contextFraction: Double {
-        guard contextWindow > 0 else { return 0 }
+    public var contextFraction: Double? {
+        guard let contextWindow, contextWindow > 0 else { return nil }
         return min(1, Double(contextTokens) / Double(contextWindow))
     }
 
@@ -75,6 +82,8 @@ public struct TranscriptState: Sendable {
     }
 
     public mutating func markProcessExited(error: String?) {
+        committedCostUSD += processCostUSD
+        processCostUSD = 0
         if isTurnActive, let error { append(TranscriptItem(id: "exit-\(items.count)", kind: .notice(.error(error)))) }
         isTurnActive = false
         pendingPermissions.removeAll()
@@ -118,8 +127,8 @@ public struct TranscriptState: Sendable {
         case .result(let info):
             lastResult = info
             isTurnActive = false
-            if let cost = info.totalCostUSD { totalCostUSD += cost }
-            if let window = info.contextWindow, window > 0 { contextWindow = window }
+            if let cost = info.totalCostUSD { processCostUSD = cost }
+            if let window = mainContextWindow(info.contextWindows), window > 0 { contextWindow = window }
             if info.isError, interruptRequested, !containsInterruptNoticeThisTurn {
                 append(TranscriptItem(id: "int-\(items.count)", kind: .notice(.interrupted)))
             } else if info.isError, info.subtype != "success", !interruptRequested {
@@ -149,8 +158,9 @@ public struct TranscriptState: Sendable {
         case .controlCancel(let requestId):
             pendingPermissions.removeAll { $0.requestId == requestId }
 
-        case .rateLimit(_, let utilization, _):
+        case .rateLimit(_, let utilization, _, let windows):
             rateLimitUtilization = utilization
+            planLimits.merge(windows) { _, new in new }
 
         case .system, .controlRequest, .controlResponse, .unknown:
             break
@@ -158,6 +168,11 @@ public struct TranscriptState: Sendable {
     }
 
     // MARK: - Ayrıntılar
+
+    private func mainContextWindow(_ windows: [String: Int]) -> Int? {
+        if let model, let window = windows[model] { return window }
+        return windows.count == 1 ? windows.values.first : windows.values.max()
+    }
 
     private mutating func applyStream(_ event: StreamEvent, messageId: String?) {
         switch event {

@@ -114,6 +114,58 @@ struct TranscriptTests {
     }
 }
 
+@Suite("Kullanım metrikleri")
+struct UsageMetricsTests {
+    /// `result.total_cost_usd` süreç içinde kümülatiftir: aynı süreçteki ikinci `result` toplamı tekrar etmez.
+    @Test func cumulativeCostIsNotDoubleCounted() throws {
+        var state = TranscriptState()
+        for m in try Fixture.lines("permission-then-interrupt") { state.apply(m) }
+        #expect(abs(state.totalCostUSD - 0.00101003) < 1e-9)
+    }
+
+    /// Yeni süreç (ör. `--resume`) kendi kümülatifine sıfırdan başlar; session toplamına eklenir.
+    @Test func costAccumulatesAcrossProcesses() throws {
+        var state = TranscriptState()
+        for m in try Fixture.lines("simple-turn") { state.apply(m) }
+        state.markProcessExited(error: nil)
+        for m in try Fixture.lines("simple-turn") { state.apply(m) }
+        #expect(abs(state.totalCostUSD - 2 * 0.00060919) < 1e-9)
+    }
+
+    /// Geçmişten açılan session'da pencere bilinmez; doluluk uydurulmaz (eski varsayılan 200k halkayı %100 gösteriyordu).
+    @Test func contextFractionIsUnknownUntilWindowIsReported() {
+        var state = TranscriptState()
+        state.apply(.assistant(messageId: "m", content: [.text("x")],
+                               usage: TokenUsage(inputTokens: 1, outputTokens: 10, cacheReadInputTokens: 551_000),
+                               parentToolUseId: nil))
+        #expect(state.contextTokens == 551_011)
+        #expect(state.contextWindow == nil)
+        #expect(state.contextFraction == nil)
+    }
+
+    /// Alt ajan başka bir modelle çalışsa da pencere session'ın ana modelininkidir (eskiden en büyüğü seçiliyordu).
+    @Test func contextWindowFollowsMainModel() throws {
+        let initLine = #"{"type":"system","subtype":"init","session_id":"s","model":"main-model","tools":[]}"#
+        let resultLine = #"{"type":"result","subtype":"success","is_error":false,"total_cost_usd":1,"usage":{},"modelUsage":{"main-model":{"contextWindow":200000},"sub-model":{"contextWindow":1000000}}}"#
+        var state = TranscriptState()
+        state.apply(try #require(InboundMessage.decode(line: Data(initLine.utf8))))
+        state.apply(try #require(InboundMessage.decode(line: Data(resultLine.utf8))))
+        #expect(state.contextWindow == 200_000)
+    }
+
+    /// Claude uygulamasındaki gibi 5 saatlik ve haftalık plan limitleri ayrı ayrı (gerçek CLI olayı, spike fixture'ı).
+    @Test func planLimitWindowsAreParsed() throws {
+        var state = TranscriptState()
+        for m in try Fixture.lines("permission-then-interrupt") { state.apply(m) }
+        let fiveHour = try #require(state.planLimits[.fiveHour])
+        let weekly = try #require(state.planLimits[.sevenDay])
+        #expect(fiveHour.utilization == 0.01)
+        #expect(fiveHour.resetsAt == Date(timeIntervalSince1970: 1_792_698_600))
+        #expect(weekly.utilization == 0.8)
+        #expect(weekly.resetsAt == Date(timeIntervalSince1970: 1_792_846_800))
+    }
+}
+
 @Suite("Geçmiş indeksi")
 struct HistoryIndexTests {
     @Test func indexesProjectsDirectory() throws {
