@@ -52,6 +52,10 @@ public actor AgentEngine {
         try process(id).send(.userText(text))
     }
 
+    public func sendUserMessage(_ message: UserMessage, to id: UUID) throws {
+        try process(id).send(.userMessage(message))
+    }
+
     public func interrupt(_ id: UUID) throws {
         try process(id).send(.interrupt(requestId: Self.requestId()))
     }

@@ -30,6 +30,8 @@ public struct TranscriptState: Sendable {
     public private(set) var contextWindow: Int?
     public private(set) var outputTokensThisTurn: Int = 0
     public private(set) var rateLimitUtilization: Double?
+    /// CLI'ın `initialize` cevabındaki komutlar (slash önerileri için).
+    public private(set) var slashCommands: [SlashCommand] = []
     /// Son bildirilen 5 saatlik ve haftalık plan limitleri.
     public private(set) var planLimits: [PlanLimitKind: PlanLimit] = [:]
 
@@ -162,6 +164,9 @@ public struct TranscriptState: Sendable {
             rateLimitUtilization = utilization
             planLimits.merge(windows) { _, new in new }
 
+        case .controlResponse(_, true, let payload, _):
+            if let commands = SlashCommand.list(from: payload) { slashCommands = commands }
+
         case .system, .controlRequest, .controlResponse, .unknown:
             break
         }
@@ -279,6 +284,9 @@ public struct TranscriptState: Sendable {
     }
 
     private mutating func applyUser(_ content: [ContentBlock]) {
+        // Bir kullanıcı mesajının metni ve Monster'ın eklediği dosya/görsel blokları tek balonda birleşir (canlıdaki gibi).
+        var lines: [String] = []
+        defer { if !lines.isEmpty { appendUser(lines.joined(separator: "\n")) } }
         for block in content {
             switch block {
             case .toolResult(let toolUseId, let result, let isError):
@@ -290,9 +298,13 @@ public struct TranscriptState: Sendable {
             case .text(let text):
                 if text.hasPrefix("[Request interrupted") {
                     append(TranscriptItem(id: "int-\(items.count)", kind: .notice(.interrupted)))
+                } else if let line = UserMessage.attachmentLine(forBlockText: text) {
+                    lines.append(line)
                 } else if !Self.isSyntheticUserText(text) {
-                    appendUser(text)
+                    lines.append(text)
                 }
+            case .image:
+                lines.append("🖼 görsel")
             default:
                 break
             }

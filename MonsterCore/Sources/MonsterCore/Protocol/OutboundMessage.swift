@@ -3,6 +3,8 @@ import Foundation
 /// Monster → CLI (stdin) mesajları. Her biri tek satır JSON + "\n" olarak yazılır.
 public enum OutboundMessage: Sendable {
     case userText(String)
+    /// Metin + `@yol` içerikleri + ekler (görsel blokları). Ek yoksa `userText` ile aynı satırı üretir.
+    case userMessage(UserMessage)
     case initialize(requestId: String)
     case interrupt(requestId: String)
     case setPermissionMode(requestId: String, mode: PermissionMode)
@@ -13,6 +15,8 @@ public enum OutboundMessage: Sendable {
         switch self {
         case .userText(let text):
             return ["type": "user", "message": ["role": "user", "content": .string(text)]]
+        case .userMessage(let message):
+            return ["type": "user", "message": ["role": "user", "content": message.content]]
         case .initialize(let id):
             return Self.control(id, ["subtype": "initialize"])
         case .interrupt(let id):

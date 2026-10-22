@@ -24,6 +24,12 @@ final class SessionController: Identifiable {
     private(set) var lastFirstTokenLatency: Duration?
     private(set) var cliVersion: String?
     var draft = ""
+    /// Composer'a eklenmiş görseller/dosyalar (gönderilince temizlenir).
+    var attachments: [Attachment] = []
+    var attachmentError: String?
+    /// `@` önerileri için proje dosyaları; ilk `@`ta arka planda oluşturulur. Yalnızca kod modunda.
+    private(set) var fileIndex: FileIndex?
+    @ObservationIgnored private var fileIndexTask: Task<Void, Never>?
 
     @ObservationIgnored private let engine: AgentEngine
     @ObservationIgnored private let history: HistoryIndexer
@@ -113,24 +119,74 @@ final class SessionController: Identifiable {
 
     // MARK: - Kullanıcı eylemleri
 
+    var canSend: Bool {
+        let hasText = !draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        return (hasText || !attachments.isEmpty) && !isTurnActive
+    }
+
+    var slashCommands: [SlashCommand] { transcript.slashCommands }
+
+    /// `@` önerileri yalnızca proje kökü olan kod modunda.
+    var supportsFileMentions: Bool { record.mode == .code && record.projectPath != nil }
+
+    func ensureFileIndex() {
+        guard supportsFileMentions, fileIndex == nil, fileIndexTask == nil else { return }
+        let root = record.workingDirectory
+        fileIndexTask = Task { [weak self] in
+            let index = await Task.detached(priority: .userInitiated) { FileIndex.build(root: root) }.value
+            self?.fileIndex = index
+        }
+    }
+
+    func addAttachments(from urls: [URL]) {
+        for url in urls {
+            guard attachments.count < Attachment.maxAttachments else {
+                attachmentError = "En fazla \(Attachment.maxAttachments) ek eklenebilir."
+                return
+            }
+            do { attachments.append(try Attachment.load(from: url)) } catch { attachmentError = error.localizedDescription }
+        }
+    }
+
+    func addImage(data: Data, name: String) {
+        guard attachments.count < Attachment.maxAttachments else {
+            attachmentError = "En fazla \(Attachment.maxAttachments) ek eklenebilir."
+            return
+        }
+        do { attachments.append(try Attachment.image(data: data, name: name)) } catch { attachmentError = error.localizedDescription }
+    }
+
+    func removeAttachment(_ attachment: Attachment) {
+        attachments.removeAll { $0.id == attachment.id }
+    }
+
     func send() async {
         let text = draft.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty, !working.isTurnActive else { return }
+        guard canSend else { return }
+        let pendingAttachments = attachments
         draft = ""
+        attachments = []
+        attachmentError = nil
         if !isLive { await start() }
         guard phase == .ready else {
             draft = text
+            attachments = pendingAttachments
             return
         }
-        working.appendLocalUserMessage(text)
+        let mentions = supportsFileMentions ? MentionResolver.resolve(text: text, root: record.workingDirectory) : []
+        let message = UserMessage(text: text, mentions: mentions, attachments: pendingAttachments)
+        if mentions.contains(where: { if case .rejected = $0 { true } else { false } }) {
+            attachmentError = "Proje klasörü dışındaki @yollar eklenmedi."
+        }
+        working.appendLocalUserMessage(message.displayText)
         sendInstant = .now
         publish(force: true)
         if record.title.isEmpty || record.title == SessionTitles.placeholder {
-            record.title = SessionTitles.make(from: text)
+            record.title = SessionTitles.make(from: text.isEmpty ? message.displayText : text)
         }
         record.lastActiveAt = .now
         do {
-            try await engine.sendUserMessage(text, to: id)
+            try await engine.sendUserMessage(message, to: id)
         } catch {
             working.markProcessExited(error: error.localizedDescription)
             publish(force: true)
