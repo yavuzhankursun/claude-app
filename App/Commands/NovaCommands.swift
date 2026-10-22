@@ -1,9 +1,26 @@
 import NovaCore
 import SwiftUI
 
+// Elle yazılmış anahtarlar: varsayılan MainActor izolasyonunda `@Entry` makrosunun ürettiği anahtar
+// tiplerinin izolasyonuna güvenmek yerine açıkça `nonisolated`.
+nonisolated struct WindowStateFocusKey: FocusedValueKey {
+    typealias Value = WindowState
+}
+
+nonisolated struct ActiveSessionFocusKey: FocusedValueKey {
+    typealias Value = SessionController
+}
+
 extension FocusedValues {
-    @Entry var windowState: WindowState?
-    @Entry var activeSession: SessionController?
+    var windowState: WindowState? {
+        get { self[WindowStateFocusKey.self] }
+        set { self[WindowStateFocusKey.self] = newValue }
+    }
+
+    var activeSession: SessionController? {
+        get { self[ActiveSessionFocusKey.self] }
+        set { self[ActiveSessionFocusKey.self] = newValue }
+    }
 }
 
 /// Menü çubuğu komutları. Pencereye özgü eylemler `FocusedValue` üzerinden o pencerenin durumuna gider.

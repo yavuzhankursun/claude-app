@@ -95,7 +95,19 @@ public struct CLILocator: Sendable {
                 let text = String(decoding: data, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
                 continuation.resume(returning: proc.terminationStatus == 0 && !text.isEmpty ? text : nil)
             }
-            do { try process.run() } catch { continuation.resume(returning: nil) }
+            do {
+                try process.run()
+            } catch {
+                continuation.resume(returning: nil)
+                return
+            }
+            // Login shell (ör. bozuk bir .zshrc) takılırsa 5 sn sonra sonlandırılır; terminationHandler nil döndürür.
+            // PID değil Process üzerinden: süreç çoktan bittiyse yeniden kullanılmış bir PID'ye sinyal gitmez.
+            let box = ProcessBox(process)
+            Task.detached {
+                try? await Task.sleep(for: .seconds(5))
+                if box.process.isRunning { box.process.terminate() }
+            }
         }
     }
 
@@ -105,4 +117,10 @@ public struct CLILocator: Sendable {
         let b = testedVersion.split(separator: ".").prefix(2)
         return a == b
     }
+}
+
+/// `Process` Foundation'da Sendable işaretli değil; yalnızca `isRunning`/`terminate` için taşınır.
+private final class ProcessBox: @unchecked Sendable {
+    let process: Process
+    init(_ process: Process) { self.process = process }
 }
