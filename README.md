@@ -1,40 +1,42 @@
 # Monster
 
-Claude Code için kişisel, native bir macOS istemcisi. SwiftUI + Liquid Glass, en güncel Apple SDK
-(**Xcode 27.1 / macOS 27 SDK**, Swift 6), dağıtım hedefi **macOS 26+**.
+**English** | [Türkçe](README.tr.md)
 
-Monster kendi API anahtarını tutmaz: kurulu `claude` CLI'ını alt süreç olarak çalıştırır (stream-json) ve onun girişini kullanır.
+A personal, native macOS client for Claude Code. SwiftUI + Liquid Glass, built against the latest Apple SDK
+(**Xcode 27.1 / macOS 27 SDK**, Swift 6), deployment target **macOS 26+**.
 
-## Hızlı başlangıç (Mac)
+Monster holds no API key of its own: it runs the installed `claude` CLI as a subprocess (stream-json) and uses its login.
+
+## Quick start (Mac)
 
 ```sh
 make bootstrap      # xcodegen (Homebrew)
-make core-test      # MonsterCore birim testleri
-make run            # Monster.xcodeproj üret, derle, aç
-make spike          # gerçek CLI ile protokol doğrulaması (haiku, geçici dizin)
+make core-test      # MonsterCore unit tests
+make run            # generate Monster.xcodeproj, build, open
+make spike          # protocol validation against the real CLI (haiku, temp directory)
 ```
 
-Gereksinimler: macOS 26+, Xcode 27.1, Claude Code CLI (test edilen: 2.1.308) ve en az bir kez `claude` ile giriş.
+Requirements: macOS 26+, Xcode 27.1, Claude Code CLI (tested with 2.1.308) and at least one prior `claude` login.
 
-## Yapı
+## Layout
 
 ```
-App/                 SwiftUI uygulaması (Monster.app)
-  Design/Theme.swift   glass kuralı (monsterGlass, MonsterGlassButtonStyle, Motion, zemin)
-  Model/               AppModel, SessionController (kare başına yayın), SessionRecord (SwiftData)
-  Views/               Sidebar, Session, Transcript, Composer, Permission, Palet, Settings
-MonsterCore/         UI'dan bağımsız Swift paketi (swift test)
+App/                 SwiftUI application (Monster.app)
+  Design/Theme.swift   glass rules (monsterGlass, MonsterGlassButtonStyle, Motion, surfaces)
+  Model/               AppModel, SessionController (per-frame publishing), SessionRecord (SwiftData)
+  Views/               Sidebar, Session, Transcript, Composer, Permission, Palette, Settings
+MonsterCore/         UI-independent Swift package (swift test)
   Protocol/            JSONValue, InboundMessage, OutboundMessage, NDJSONLineSplitter
   Engine/              AgentEngine (actor), ClaudeProcess, LaunchConfiguration, CLILocator
-  Transcript/          TranscriptState reducer (akış + geçmiş + izin + kullanım)
-  History/             ~/.claude/projects indeksleyici (salt-okunur)
-  Rendering/ Diff/     Markdown blokları, vurgulama, widget CSP, satır diff'i
-docs/                PRD, PROJECT_STATE, ADR'ler, tehdit modeli, spike raporu
-scripts/             G2 spike sürücüsü
+  Transcript/          TranscriptState reducer (stream + history + permissions + usage)
+  History/             ~/.claude/projects indexer (read-only)
+  Rendering/ Diff/     Markdown blocks, highlighting, widget CSP, line diff
+docs/                PRD, PROJECT_STATE, ADRs, threat model, spike report
+scripts/             G2 spike driver
 ```
 
-## Kısayollar
-⌘N yeni kod session'ı · ⇧⌘N yeni sohbet · ⌘K komut paleti · ⌘1…9 session · Esc durdur ·
-↩ gönder / ⇧↩ yeni satır · İzin kartında ⌘↩ izin ver, ⌥⌘↩ bu session için, ⌘⌫ reddet.
+## Shortcuts
+⌘N new code session · ⇧⌘N new chat · ⌘K command palette · ⌘1…9 switch session · Esc stop ·
+↩ send / ⇧↩ new line · On a permission card: ⌘↩ allow, ⌥⌘↩ allow for this session, ⌘⌫ deny.
 
-Durum ve açık maddeler: [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md).
+Status and open items: [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md).
